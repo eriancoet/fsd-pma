@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { Project, Task } from '../types';
-import { initializeSampleData } from '../utils/sampleData';
-import { useAuth } from './AuthContext'; // adjust path if needed
+import { useAuth } from './AuthContext';
 
 interface DataContextType {
   projects: Project[];
@@ -28,10 +27,10 @@ function makeStorageKey(userId: string) {
   return `pma:data:${userId}`;
 }
 
-
 function safeLoad(key: string): StoredData {
   const raw = localStorage.getItem(key);
   if (!raw) return EMPTY;
+
   try {
     const parsed = JSON.parse(raw) as StoredData;
     return {
@@ -50,12 +49,16 @@ function safeSave(key: string, data: StoredData) {
 export function DataProvider({ children }: { children: React.ReactNode }) {
   const { user, isGuest } = useAuth();
 
-  // current "account" id
-  const activeUserId = useMemo(() => {
-    if (user?.id) return user.id;
-    if (isGuest) return 'guest';
-    return null;
-  }, [user?.id, isGuest]);
+  
+  // If your user.id changes on each login, switch to user.email (lowercased).
+ const activeUserId = useMemo(() => {
+  // Prefer a stable identifier
+  if (user?.email) return user.email.toLowerCase().trim();
+  if (user?.id) return String(user.id); // fallback
+  if (isGuest) return 'guest';
+  return null;
+}, [user?.email, user?.id, isGuest]);
+
 
   const storageKey = useMemo(() => {
     return activeUserId ? makeStorageKey(activeUserId) : null;
@@ -63,30 +66,32 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   // Load data whenever the active user changes
   useEffect(() => {
+    setHydrated(false);
+
     if (!storageKey) {
       setProjects([]);
       setTasks([]);
       return;
     }
 
-    // Optional: only run sample init per user (prevents cross-user mixing)
-    // If your initializeSampleData writes to pm_projects/pm_tasks, UPDATE it or stop using it.
-    // Safer option: comment it out for now, or rewrite it to use storageKey.
-    // initializeSampleData();
-
     const data = safeLoad(storageKey);
     setProjects(data.projects);
     setTasks(data.tasks);
+
+    setHydrated(true);
   }, [storageKey]);
 
-  // Save whenever projects/tasks change (to the CURRENT user's key)
+  // Save only AFTER we have loaded data for that user
   useEffect(() => {
     if (!storageKey) return;
+    if (!hydrated) return;
+
     safeSave(storageKey, { projects, tasks });
-  }, [storageKey, projects, tasks]);
+  }, [storageKey, hydrated, projects, tasks]);
 
   const createProject = (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => {
     const now = new Date().toISOString();
