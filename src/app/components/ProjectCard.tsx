@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { MoreVertical, Trash2, Edit } from 'lucide-react';
+import { MoreVertical, Trash2, Edit, Plus } from 'lucide-react';
 import { motion } from 'motion/react';
 import type { Project } from '../types';
 import { useData } from '../contexts/DataContext';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button } from './ui/button';
+
 
 interface ProjectCardProps {
   project: Project;
@@ -68,27 +69,40 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </div>
-      {project.description && (
-        <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-          {project.description}
-        </p>
-      )}
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-gray-500">
-          {totalTasks} {totalTasks === 1 ? 'task' : 'tasks'}
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-blue-600 rounded-full transition-all"
-              style={{ width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%` }}
-            />
-          </div>
-          <span className="text-sm text-gray-600">
-            {totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%
-          </span>
-        </div>
-      </div>
+     {project.description && (
+  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+    {project.description}
+  </p>
+)}
+
+<div className="flex items-center justify-between">
+  <div className="text-sm text-gray-500">
+    {totalTasks} {totalTasks === 1 ? 'task' : 'tasks'}
+  </div>
+
+  <Link
+    to={`/projects/${project.id}`}
+    className="inline-flex items-center gap-1 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+  >
+    <Plus className="h-4 w-4" />
+    Add Task
+  </Link>
+</div>
+
+<div className="flex items-center justify-between mt-4">
+  <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+    <div
+      className="h-full bg-blue-600 rounded-full transition-all"
+      style={{ width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%` }}
+    />
+  </div>
+  <span className="text-sm text-gray-600">
+    {totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%
+  </span>
+</div>
+
+  
+
     </motion.div>
   );
 }
