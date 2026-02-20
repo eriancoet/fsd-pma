@@ -124,6 +124,21 @@
     @apply border-border outline-ring/50;
   }
 
+  a,
+  button,
+  [role="button"] {
+    @apply cursor-pointer;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    font-size: var(--font-size);
+  }
+
+
   body {
     @apply bg-background text-foreground;
   }
