@@ -109,46 +109,7 @@ export function SettingsPage() {
           </form>
         </div>
 
-        {/* Appearance Section */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-purple-100 p-2 rounded-lg">
-              {theme === 'light' ? (
-                <Sun className="h-5 w-5 text-purple-600" />
-              ) : (
-                <Moon className="h-5 w-5 text-purple-600" />
-              )}
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold">Appearance</h2>
-              <p className="text-sm text-gray-600">
-                Customize how the app looks
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="font-medium">Theme</div>
-              <div className="text-sm text-gray-600">
-                Current theme: {theme === 'light' ? 'Light' : 'Dark'}
-              </div>
-            </div>
-            <Button variant="outline" onClick={toggleTheme}>
-              {theme === 'light' ? (
-                <>
-                  <Moon className="h-4 w-4" />
-                  Dark Mode
-                </>
-              ) : (
-                <>
-                  <Sun className="h-4 w-4" />
-                  Light Mode
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
+      
 
         {/* Account Section */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
