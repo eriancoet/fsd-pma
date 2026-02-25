@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
-import type { Project } from '../types';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Label } from './ui/label';
+import React, { useState, useEffect } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+import type { Project } from "../types";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
 
 interface ProjectModalProps {
   open: boolean;
@@ -15,30 +15,35 @@ interface ProjectModalProps {
 }
 
 const colors = [
-  '#3b82f6', // blue
-  '#10b981', // green
-  '#f59e0b', // yellow
-  '#ef4444', // red
-  '#8b5cf6', // purple
-  '#ec4899', // pink
-  '#06b6d4', // cyan
-  '#f97316', // orange
+  "#3b82f6", // blue
+  "#10b981", // green
+  "#f59e0b", // yellow
+  "#ef4444", // red
+  "#8b5cf6", // purple
+  "#ec4899", // pink
+  "#06b6d4", // cyan
+  "#f97316", // orange
 ];
 
-export function ProjectModal({ open, onOpenChange, onSave, project }: ProjectModalProps) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+export function ProjectModal({
+  open,
+  onOpenChange,
+  onSave,
+  project,
+}: ProjectModalProps) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [color, setColor] = useState(colors[0]);
   const [errors, setErrors] = useState<{ name?: string }>({});
 
   useEffect(() => {
     if (project) {
       setName(project.name);
-      setDescription(project.description || '');
+      setDescription(project.description || "");
       setColor(project.color);
     } else {
-      setName('');
-      setDescription('');
+      setName("");
+      setDescription("");
       setColor(colors[0]);
     }
     setErrors({});
@@ -46,9 +51,9 @@ export function ProjectModal({ open, onOpenChange, onSave, project }: ProjectMod
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim()) {
-      setErrors({ name: 'Project name is required' });
+      setErrors({ name: "Project name is required" });
       return;
     }
 
@@ -66,14 +71,28 @@ export function ProjectModal({ open, onOpenChange, onSave, project }: ProjectMod
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-lg shadow-lg w-full max-w-lg">
+
+        <Dialog.Content
+          className="
+            fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50
+            w-full max-w-lg
+            rounded-lg shadow-lg
+            bg-card text-card-foreground
+            border border-border
+          "
+        >
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <Dialog.Title className="text-xl font-semibold">
-                {project ? 'Edit Project' : 'Create Project'}
+                {project ? "Edit Project" : "Create Project"}
               </Dialog.Title>
+
               <Dialog.Close asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-foreground hover:bg-muted"
+                >
                   <X className="h-4 w-4" />
                 </Button>
               </Dialog.Close>
@@ -82,7 +101,7 @@ export function ProjectModal({ open, onOpenChange, onSave, project }: ProjectMod
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="name">
-                  Project Name <span className="text-red-500">*</span>
+                  Project Name <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="name"
@@ -92,7 +111,9 @@ export function ProjectModal({ open, onOpenChange, onSave, project }: ProjectMod
                   className="mt-1"
                 />
                 {errors.name && (
-                  <p className="text-sm text-red-500 mt-1">{errors.name}</p>
+                  <p className="text-sm text-destructive mt-1">
+                    {errors.name}
+                  </p>
                 )}
               </div>
 
@@ -103,8 +124,14 @@ export function ProjectModal({ open, onOpenChange, onSave, project }: ProjectMod
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Enter project description (optional)"
-                  className="mt-1"
                   rows={3}
+                  className="
+                    mt-1
+                    bg-background text-foreground
+                    border-border
+                    placeholder:text-muted-foreground
+                    focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background
+                  "
                 />
               </div>
 
@@ -116,9 +143,12 @@ export function ProjectModal({ open, onOpenChange, onSave, project }: ProjectMod
                       key={c}
                       type="button"
                       onClick={() => setColor(c)}
-                      className={`w-10 h-10 rounded-lg transition-all ${
-                        color === c ? 'ring-2 ring-offset-2 ring-blue-500' : ''
-                      }`}
+                      aria-label={`Select color ${c}`}
+                      className={[
+                        "w-10 h-10 rounded-lg transition-all",
+                        "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                        color === c ? "ring-2 ring-ring ring-offset-2 ring-offset-background" : "",
+                      ].join(" ")}
                       style={{ backgroundColor: c }}
                     />
                   ))}
@@ -132,7 +162,7 @@ export function ProjectModal({ open, onOpenChange, onSave, project }: ProjectMod
                   </Button>
                 </Dialog.Close>
                 <Button type="submit">
-                  {project ? 'Save Changes' : 'Create Project'}
+                  {project ? "Save Changes" : "Create Project"}
                 </Button>
               </div>
             </form>

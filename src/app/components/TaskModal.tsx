@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
-import type { Task, Priority, Status } from '../types';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Label } from './ui/label';
+import React, { useState, useEffect } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+import type { Task, Priority, Status } from "../types";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
 
 interface TaskModalProps {
   open: boolean;
@@ -15,37 +15,43 @@ interface TaskModalProps {
   projectId: string;
 }
 
-export function TaskModal({ open, onOpenChange, onSave, task, projectId }: TaskModalProps) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [status, setStatus] = useState<Status>('todo');
-  const [priority, setPriority] = useState<Priority>('medium');
-  const [dueDate, setDueDate] = useState('');
+export function TaskModal({
+  open,
+  onOpenChange,
+  onSave,
+  task,
+  projectId,
+}: TaskModalProps) {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState<Status>("todo");
+  const [priority, setPriority] = useState<Priority>("medium");
+  const [dueDate, setDueDate] = useState("");
   const [errors, setErrors] = useState<{ title?: string }>({});
 
   useEffect(() => {
     if (task) {
       setTitle(task.title);
-      setDescription(task.description || '');
+      setDescription(task.description || "");
       setStatus(task.status);
       setPriority(task.priority);
-      setDueDate(task.dueDate || '');
+      setDueDate(task.dueDate || "");
     } else {
-      setTitle('');
-      setDescription('');
-      setStatus('todo');
-      setPriority('medium');
-      setDueDate('');
+      setTitle("");
+      setDescription("");
+      setStatus("todo");
+      setPriority("medium");
+      setDueDate("");
     }
     setErrors({});
   }, [task, open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validation
     if (!title.trim()) {
-      setErrors({ title: 'Title is required' });
+      setErrors({ title: "Title is required" });
       return;
     }
 
@@ -65,15 +71,29 @@ export function TaskModal({ open, onOpenChange, onSave, task, projectId }: TaskM
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
+        {/* overlay is already fine */}
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
+
+        <Dialog.Content
+          className="
+            fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50
+            w-full max-w-lg max-h-[90vh] overflow-y-auto
+            rounded-lg shadow-lg border border-border
+            bg-card text-card-foreground
+          "
+        >
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <Dialog.Title className="text-xl font-semibold">
-                {task ? 'Edit Task' : 'Create Task'}
+                {task ? "Edit Task" : "Create Task"}
               </Dialog.Title>
+
               <Dialog.Close asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-foreground hover:bg-muted"
+                >
                   <X className="h-4 w-4" />
                 </Button>
               </Dialog.Close>
@@ -82,7 +102,7 @@ export function TaskModal({ open, onOpenChange, onSave, task, projectId }: TaskM
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="title">
-                  Title <span className="text-red-500">*</span>
+                  Title <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="title"
@@ -92,20 +112,27 @@ export function TaskModal({ open, onOpenChange, onSave, task, projectId }: TaskM
                   className="mt-1"
                 />
                 {errors.title && (
-                  <p className="text-sm text-red-500 mt-1">{errors.title}</p>
+                  <p className="text-sm text-destructive mt-1">{errors.title}</p>
                 )}
               </div>
 
               <div>
                 <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter task description (optional)"
-                  className="mt-1"
-                  rows={3}
-                />
+             <Textarea
+  id="description"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  placeholder="Enter task description (optional)"
+  rows={3}
+  className="
+    mt-1
+    bg-background
+    text-foreground
+    border-border
+    placeholder:text-muted-foreground
+    focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background
+  "
+/>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -115,7 +142,12 @@ export function TaskModal({ open, onOpenChange, onSave, task, projectId }: TaskM
                     id="status"
                     value={status}
                     onChange={(e) => setStatus(e.target.value as Status)}
-                    className="mt-1 w-full h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="
+                      mt-1 w-full h-10 rounded-lg
+                      border border-border bg-background
+                      px-3 text-sm text-foreground
+                      focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background
+                    "
                   >
                     <option value="todo">To Do</option>
                     <option value="doing">Doing</option>
@@ -129,7 +161,12 @@ export function TaskModal({ open, onOpenChange, onSave, task, projectId }: TaskM
                     id="priority"
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as Priority)}
-                    className="mt-1 w-full h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="
+                      mt-1 w-full h-10 rounded-lg
+                      border border-border bg-background
+                      px-3 text-sm text-foreground
+                      focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background
+                    "
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -156,7 +193,7 @@ export function TaskModal({ open, onOpenChange, onSave, task, projectId }: TaskM
                   </Button>
                 </Dialog.Close>
                 <Button type="submit">
-                  {task ? 'Save Changes' : 'Create Task'}
+                  {task ? "Save Changes" : "Create Task"}
                 </Button>
               </div>
             </form>
