@@ -13,7 +13,9 @@ export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {}
+  );
   const [loadingEmail, setLoadingEmail] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -36,10 +38,12 @@ export function LoginPage() {
     const cleanEmail = email.trim();
 
     if (!cleanEmail) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(cleanEmail)) newErrors.email = "Invalid email format";
+    else if (!/\S+@\S+\.\S+/.test(cleanEmail))
+      newErrors.email = "Invalid email format";
 
     if (!password) newErrors.password = "Password is required";
-    else if (password.length < 6) newErrors.password = "Password must be at least 6 characters";
+    else if (password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -92,12 +96,12 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md"
+        className="bg-card text-card-foreground border border-border rounded-2xl shadow-xl p-8 w-full max-w-md"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -105,13 +109,13 @@ export function LoginPage() {
           transition={{ delay: 0.2, type: "spring" }}
           className="flex items-center justify-center mb-8"
         >
-          <div className="bg-blue-600 p-3 rounded-xl">
-            <CheckSquare className="h-8 w-8 text-white" />
+          <div className="bg-primary p-3 rounded-xl">
+            <CheckSquare className="h-8 w-8 text-primary-foreground" />
           </div>
         </motion.div>
 
         <h1 className="text-3xl font-bold text-center mb-2">PMA</h1>
-        <p className="text-center text-gray-600 mb-8">
+        <p className="text-center text-muted-foreground mb-8">
           Log in to manage your projects and tasks
         </p>
 
@@ -130,7 +134,9 @@ export function LoginPage() {
               className="mt-1"
               autoComplete="email"
             />
-            {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-sm text-destructive mt-1">{errors.email}</p>
+            )}
           </div>
 
           <div>
@@ -147,10 +153,14 @@ export function LoginPage() {
               className="mt-1"
               autoComplete="current-password"
             />
-            {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-sm text-destructive mt-1">
+                {errors.password}
+              </p>
+            )}
           </div>
 
-          {errorMsg && <p className="text-sm text-red-500">{errorMsg}</p>}
+          {errorMsg && <p className="text-sm text-destructive">{errorMsg}</p>}
 
           <Button type="submit" className="w-full" disabled={loadingEmail}>
             {loadingEmail ? "Signing in…" : "Sign In"}
@@ -168,10 +178,10 @@ export function LoginPage() {
 
         <div className="relative mb-4">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
+            <div className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">or</span>
+            <span className="px-2 bg-card text-muted-foreground">or</span>
           </div>
         </div>
 
@@ -201,22 +211,26 @@ export function LoginPage() {
                 fill="#EA4335"
               />
             </svg>
-
             {oauthLoading ? "Opening Google…" : "Continue with Google"}
           </Button>
 
-          <Button type="button" variant="outline" className="w-full" onClick={handleGuest}>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleGuest}
+          >
             Continue as Guest
           </Button>
 
           <Button
-          type="button"
-          variant="ghost"
-          className="w-full justify-center text-sm"
-          onClick={() => navigate("/signup")}
+            type="button"
+            variant="ghost"
+            className="w-full justify-center text-sm"
+            onClick={() => navigate("/signup")}
           >
-          Don’t have an account? Create one
-        </Button>
+            Don’t have an account? Create one
+          </Button>
         </div>
       </motion.div>
     </div>

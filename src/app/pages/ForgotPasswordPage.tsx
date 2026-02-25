@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { motion } from "motion/react";
 import { Mail } from "lucide-react";
 
@@ -62,30 +62,33 @@ export function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md"
+        className="bg-card text-card-foreground border border-border rounded-2xl shadow-xl p-8 w-full max-w-md"
       >
         <div className="flex items-center justify-center mb-8">
-          <div className="bg-blue-600 p-3 rounded-xl">
-            <Mail className="h-8 w-8 text-white" />
+          <div className="bg-primary p-3 rounded-xl">
+            <Mail className="h-8 w-8 text-primary-foreground" />
           </div>
         </div>
 
-        <h1 className="text-2xl font-bold text-center mb-2">Forgot your password?</h1>
-        <p className="text-center text-gray-600 mb-8">
+        <h1 className="text-2xl font-bold text-center mb-2">
+          Forgot your password?
+        </h1>
+        <p className="text-center text-muted-foreground mb-8">
           Enter your email and we’ll send you a password reset link.
         </p>
 
         {done ? (
           <div className="space-y-6">
-            <div className="rounded-xl border border-gray-200 p-4">
-              <p className="text-sm text-gray-700">
-                If an account exists for <span className="font-medium">{email.trim()}</span>, we’ve sent a reset
-                link. Please check your inbox (and spam/junk).
+            <div className="rounded-xl border border-border bg-muted/20 p-4">
+              <p className="text-sm text-foreground">
+                If an account exists for{" "}
+                <span className="font-medium">{email.trim()}</span>, we’ve sent a
+                reset link. Please check your inbox (and spam/junk).
               </p>
             </div>
 
@@ -106,14 +109,21 @@ export function ForgotPasswordPage() {
                 placeholder="you@example.com"
                 className="mt-1"
               />
-              {errorMsg && <p className="text-sm text-red-500 mt-1">{errorMsg}</p>}
+              {errorMsg && (
+                <p className="text-sm text-destructive mt-1">{errorMsg}</p>
+              )}
             </div>
 
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? "Sending…" : "Send reset link"}
             </Button>
 
-            <Button type="button" variant="outline" className="w-full" onClick={() => navigate("/")}>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => navigate("/")}
+            >
               Cancel
             </Button>
           </form>
