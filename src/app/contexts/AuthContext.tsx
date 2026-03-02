@@ -64,13 +64,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSbUser(s?.user ?? null);
 
       if (s?.user) {
-        // Supabase session wins over local storage
-        setUser(mapSupabaseUserToAppUser(s.user));
-        setIsGuest(false);
-        localStorage.removeItem("pm_guest");
-        localStorage.removeItem("pm_user");
-      }
-
+  setUser(mapSupabaseUserToAppUser(s.user));
+  setIsGuest(false);
+  // DON'T delete pm_guest/pm_user here
+}
+      
       setLoading(false);
     });
 
